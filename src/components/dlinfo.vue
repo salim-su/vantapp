@@ -38,7 +38,7 @@
                         <span class="fg">-</span>
                         <span class="time">2020-02-02</span>
 
-                        <img class="qr" src="../assets/img/scan.png" alt="">
+                        <img class="qr" src="../assets/img/scan.png" alt="" @click="showPopup">
 
                         <img class="cz" src="../assets/img/cz.png" alt="" @click="show = true,selItem = item">
 
@@ -57,7 +57,6 @@
             </div>
 
 
-
             <van-action-sheet
                 v-model="show"
                 :actions="actions"
@@ -65,12 +64,14 @@
                 close-on-click-action
                 @select="onSelect(selItem)"
             />
+
+            <van-popup closeable v-model="showPop" class="popstyle">内容</van-popup>
         </div>
     </div>
 </template>
 
 <script>
-    import {Button, Field, Form, ActionSheet, Toast, Search} from "vant";
+    import {Button, Field, Form, ActionSheet, Toast, Search, Popup} from "vant";
 
     export default {
         name: "dlinfo",
@@ -81,6 +82,7 @@
                 actions: [{name: '编辑'}, {name: '船员记录'}, {name: '删除', color: '#ee0a24'}],
                 selItem: '',
                 value: '',
+                showPop: false,
             }
         },
         components: {
@@ -90,6 +92,7 @@
             [ActionSheet.name]: ActionSheet,
             [Toast.name]: Toast,
             [Search.name]: Search,
+            [Popup.name]: Popup,
         },
         methods: {
             onSelect(item) {
@@ -107,6 +110,9 @@
             },
             onCancel() {
                 Toast('取消');
+            },
+            showPopup() {
+                this.showPop = true;
             },
         },
     }
@@ -225,16 +231,31 @@
         height: 20px;
         width: 20px;
     }
-    .van-search{
+
+    .van-search {
         background: unset !important;
     }
-    .van-search__content{
+
+    .van-search__content {
         background-color: unset !important;
         border-bottom-style: solid;
         border-bottom-color: #AEC2DC;
     }
-    .van-search__label{
+
+    .van-search__label {
         color: #ffffff;
     }
 
+    .van-popup {
+        width: 200px;
+        height: 200px;
+    }
+    .van-popup__close-icon--top-right{
+        top: 0;
+        right: 0;
+    }
+    .van-icon{
+        top: 0;
+        right: 0;
+    }
 </style>

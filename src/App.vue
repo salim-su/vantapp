@@ -37,4 +37,8 @@
         color: #1DBD65 !important;
         margin-right: 20px;
     }
+    .popstyle .van-icon{
+        top: 0;
+        right: 0;
+    }
 </style>
