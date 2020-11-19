@@ -1,5 +1,9 @@
 <template>
+
+
+
     <div class="dlinfo">
+
         <div class="search">
             <van-search
                 v-model="value"
@@ -25,7 +29,7 @@
                         <span class="country">中国</span>
                         <span class="fx">低风险</span>
 
-                        <img @click="goMore('1')" class="more" src="../assets/img/more.png" alt="">
+<!--                        <img @click="goMore('1')" class="more" src="../assets/img/more.png" alt="">-->
                         <img @click="goAdd('1')" class="add" src="../assets/img/add.png" alt="">
 
 
@@ -38,7 +42,7 @@
                         <span class="fg">-</span>
                         <span class="time">2020-02-02</span>
 
-                        <img class="qr" src="../assets/img/scan.png" alt="" @click="showPopup">
+                        <img class="qr" src="../assets/img/scan.png" alt="" @click="showPopup(item)">
 
                         <img class="cz" src="../assets/img/cz.png" alt="" @click="show = true,selItem = item">
 
@@ -62,24 +66,29 @@
                 :actions="actions"
                 cancel-text="取消"
                 close-on-click-action
-                @select="onSelect(selItem)"
+                @select="onSelect"
             />
 
-            <van-popup closeable v-model="showPop" class="popstyle">内容</van-popup>
+            <van-popup closeable v-model="showPop" class="popstyle">
+                <div id="qrcode"></div>
+                <div>请扫描二维码如实填写信息</div>
+            </van-popup>
         </div>
     </div>
 </template>
 
+
+
 <script>
     import {Button, Field, Form, ActionSheet, Toast, Search, Popup} from "vant";
-
+    import QRCode from 'qrcodejs2';
     export default {
         name: "dlinfo",
         data() {
             return {
                 msg: 'Welcome to Your Vue.js App',
                 show: false,
-                actions: [{name: '编辑'}, {name: '船员记录'}, {name: '删除', color: '#ee0a24'}],
+                actions: [{name: '编辑',key:1}, {name: '船员记录',key:2}, {name: '删除', color: '#ee0a24',key:3}],
                 selItem: '',
                 value: '',
                 showPop: false,
@@ -94,16 +103,31 @@
             [Search.name]: Search,
             [Popup.name]: Popup,
         },
+        mounted(){
+            // this.qrcode();
+        },
         methods: {
             onSelect(item) {
-                console.log(item)
+                console.log(item.key);
+                console.log(this.selItem)
+                if (item.key === 2){
+                    this.$router.push('/crewRecord');
+                }
                 this.show = false;
             },
             goMore(item) {
 
             },
             goAdd(item) {
+                let data = {
+                    begin: '00:00',
+                    end: '00:00'
+                };
 
+                let arr = JSON.stringify(data);
+
+                // this.$router.push("/banci?obj="+encodeURIComponent(arr))
+                this.$router.push('/banci');
             },
             onSearch(val) {
                 Toast(val);
@@ -111,8 +135,25 @@
             onCancel() {
                 Toast('取消');
             },
-            showPopup() {
+            showPopup(item) {
                 this.showPop = true;
+                setTimeout(res=>{
+                    this.qrcode(item);
+                },300)
+            },
+
+            qrcode(item) {
+                console.log(item)
+                let code  = document.getElementById("qrcode");
+                if (code.childNodes.length > 0) {
+                    code.innerHTML = "";
+                }
+                console.log("加载二维码")
+                let qrcode = new QRCode('qrcode', {
+                    width: 150,
+                    height: 150,
+                    text: 'https://www.baidu.com?code='+item, // 二维码地址
+                })
             },
         },
     }
@@ -138,15 +179,9 @@
         height: calc(100vh - 60px);
         width: 100vw;
         overflow: auto;
-        /*display: flex;*/
-        /*flex-direction: column;*/
-        /*justify-content: center;*/
     }
 
     .card-item {
-        /*width: 500px;*/
-        /*height: 500px;*/
-        /*padding-left: 38px;*/
         margin-left: 22px;
         margin-top: 20px;
     }
@@ -246,10 +281,15 @@
         color: #ffffff;
     }
 
-    .van-popup {
+    .popstyle {
         width: 200px;
         height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
+
     .van-popup__close-icon--top-right{
         top: 0;
         right: 0;
@@ -258,4 +298,9 @@
         top: 0;
         right: 0;
     }
+    #qrcode{
+        border: 1px solid #1DBD65;
+        padding: 6px;
+    }
+
 </style>

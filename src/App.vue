@@ -41,4 +41,19 @@
         top: 0;
         right: 0;
     }
+    .flex{
+        display: flex;
+    }
+    .fs12{
+        font-size: 12px;
+    }
+    .fs10{
+        font-size: 10px;
+    }
+    .fs14{
+        font-size: 14px;
+    }
+    .mr5{
+        margin-right: 5px;
+    }
 </style>
