@@ -1,17 +1,16 @@
 <template>
     <div class="crewRecord">
-        <div class="search flex" @click="search()">
-            <div class="back">
-                <
+        <div class="search flex">
+            <div class="back" @click="goBack">
+                <img class="banci-img" src="../assets/img/goback.png" alt="">
             </div>
             <van-search
                 v-model="value"
-                @search="onSearch"
+                @focus="search"
                 @cancel="onCancel"
                 left-icon=""
                 label="船员记录"
                 right-icon="search"
-                disabled
             />
         </div>
 
@@ -68,7 +67,7 @@
         </div>
 
 
-        <van-popup v-model:show="show" position="top" :style="{ height: '50%' }">
+        <van-popup v-model:show="show" position="top" :style="{ height: '100%' }">
             <div class="pop-search">
                 <div class="pop-search-title">
                     <span>条件查询</span>
@@ -128,6 +127,9 @@
             [Popup.name]: Popup,
         },
         methods: {
+            goBack() {
+                this.$router.push('/dlinfo');
+            },
             onSearch(val) {
                 Toast(val);
             },
@@ -192,6 +194,7 @@
     .van-search {
         background: unset !important;
         flex-grow: 1;
+        padding-left: 0;
     }
 
     .van-search__content {
@@ -261,5 +264,9 @@
 
     .pop-search .van-cell {
         margin-top: 10px;
+    }
+    .banci-img{
+        width: 28px;
+        height: 28px;
     }
 </style>

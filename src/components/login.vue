@@ -56,7 +56,25 @@
       onSubmit(values) {
         console.log(this.username)
         console.log('submit', values);
-        this.$router.push('/dlinfo');
+
+
+          this.$axios({
+                  method: 'GET',
+                  url: `/blade-auth/oauth/token?username=${this.username}&password=${this.password}&grant_type=captcha&scope=all&type=account`,
+                  headers: {
+                      Authorization: 'Basic c2FiZXI6c2FiZXJfc2VjcmV0'
+                      // 'token': window.localStorage.getItem('token')　　　　//由于是多页面应用所以token存储在本地localStorage中
+                  }
+              },
+          ).then(res => {
+              console.log(res)
+          }).catch(req => {
+              console.log(req)
+          })
+
+
+
+        // this.$router.push('/dlinfo');url: `/blade-auth/oauth/token`,
       },
     },
 

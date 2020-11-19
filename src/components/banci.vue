@@ -1,8 +1,9 @@
 <template>
     <div class="banci">
-        <div class="back" @click="goBack">
-            <div>
-                返回
+        <div class="back">
+            <div class="flex back-banci">
+                <img class="banci-img" src="../assets/img/goback.png" alt="" @click="goBack">
+                <span>班次信息</span>
             </div>
         </div>
 
@@ -169,6 +170,7 @@
 
     .back {
         padding: 20px;
+        padding-left: 0;
         color: #ffffff;
         font-size: 12px;
     }
@@ -193,5 +195,12 @@
     }
     button{
         margin-top: 30px;
+    }
+    .back-banci{
+        align-items: center;
+    }
+    .banci-img{
+        width: 32px;
+        height: 32px;
     }
 </style>

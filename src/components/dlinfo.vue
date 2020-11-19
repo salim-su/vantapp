@@ -109,9 +109,18 @@
         methods: {
             onSelect(item) {
                 console.log(item.key);
-                console.log(this.selItem)
+                console.log(this.selItem);
+
+                if (item.key === 1){
+                    this.$router.push('/banci');
+                }
+
                 if (item.key === 2){
                     this.$router.push('/crewRecord');
+                }
+
+                if (item.key === 3){
+                    //删除班次信息
                 }
                 this.show = false;
             },

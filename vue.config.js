@@ -3,14 +3,14 @@ module.exports = {
   devServer: {
     port: 8080,
     proxy: {
-      '/pt': {
+      '/api': {
         //本地服务接口地址
-        target: 'http://localhost:8877/',
+        target: 'http://localhost:8866/',
         //远程演示服务地址,可用于直接启动项目
         //target: 'https://saber.bladex.vip/api',
         ws: true,
         pathRewrite: {
-          '^/pt': '/'
+          '^/api': '/'
         }
       }
     }
