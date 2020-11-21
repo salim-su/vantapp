@@ -34,12 +34,9 @@
 </template>
 
 <script>
-    // import Vue from 'vue';
     import {Button, Toast} from "vant";
     import {Form} from 'vant';
     import {Field} from 'vant';
-    import Vuex from 'vuex'
-    // Vue.use(Form);
     export default {
         name: "login",
         components: {
@@ -57,10 +54,6 @@
         },
         methods: {
             onSubmit(values) {
-                console.log(this.username)
-                console.log('submit', values);
-
-
                 this.$axios({
                         method: 'post',
                         url: `blade-auth/oauth/token?tenantId=000000&username=${this.username}&password=${this.password}&grant_type=password&scope=all&type=account`,
@@ -71,18 +64,7 @@
                     },
                 ).then(res => {
                     if (res.status === 200) {
-                        // console.log(res)
-                        // localStorage.clear()
                         localStorage.setItem('token',res.data.access_token)
-                        // localStorage['flag']=1
-                        // // localStorage.setItem('flag',1)
-                        // sessionStorage.clear()
-                        // // sessionStorage['userid']=JSON.stringify(res.data.userInfo.id)
-                        // sessionStorage.setItem('userid',JSON.stringify(res.data.userInfo.id))
-                        // sessionStorage['token']=JSON.stringify(res.data.access_token)
-
-
-
                         this.$router.push('/dlinfo');
                     }
                 }).catch(req => {

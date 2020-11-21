@@ -165,7 +165,7 @@
                     console.log(res.data.data);
                     this.crewRecord = res.data.data;
                 }).catch(req => {
-                    console.log(req)
+                    this.$router.push('/login');
                 })
             }
 

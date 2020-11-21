@@ -128,7 +128,7 @@
                 ).then(res => {
                     this.$router.push('/dlinfo');
                 }).catch(req => {
-                    console.log(req)
+                    this.$router.push('/login');
                 })
             },
         },

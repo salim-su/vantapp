@@ -128,7 +128,6 @@
         },
         methods: {
             onSelect(item) {
-                console.log(item.key);
                 if (item.key === 1) {
                     const data = {
                         shipId: this.selItem.shipId,
@@ -148,8 +147,6 @@
                     }
                     let obj = JSON.stringify(data);
                     this.$router.push("/crewRecord?obj=" + encodeURIComponent(obj))
-
-                    // this.$router.push('/crewRecord');
                 }
 
                 if (item.key === 3) {
@@ -164,6 +161,7 @@
                         Toast("删除班次信息成功");
                         this.getshipList();
                     }).catch(req => {
+                        this.$router.push('/login');
                     })
                 }
                 this.show = false;
@@ -172,17 +170,11 @@
 
             },
             goAdd(item) {
-
-                console.log(item);
-
-
                 let data = {
                     shipId: item.id
                 };
                 let objAdd = JSON.stringify(data);
-
                 this.$router.push("/banci?objAdd=" + encodeURIComponent(objAdd))
-                // this.$router.push('/banci');
             },
             onSearch(val) {
                 this.name = val;
@@ -231,7 +223,7 @@
                     console.log(res.data.data);
                     this.shipInfo = res.data.data;
                 }).catch(req => {
-                    console.log(req)
+                    this.$router.push('/login');
                 })
             }
         },
