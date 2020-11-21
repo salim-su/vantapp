@@ -1,21 +1,22 @@
 <template>
     <div class="crewRecordDetails">
-
-
-        <div class="top fs12" >
-            详细信息
+        <div class="back">
+            <div class="flex back-banci">
+                <img class="banci-img" src="../assets/img/goback.png" alt="" @click="goBack">
+                <span>详细信息</span>
+            </div>
         </div>
 
         <div class="content">
             <div class="info">
                 <div class="info-top">
                     <div class="name">
-                        速速速
+                        {{crewRecordDetails.name}}
                     </div>
                     <div class="sex fs12">
-                        <span class="mr5">中国</span>
+                        <span class="mr5">{{crewRecordDetails.nationalityName}}</span>
                         <span class="mr5">|</span>
-                        <span>男</span>
+                        <span>{{crewRecordDetails.genderName}}</span>
                     </div>
                 </div>
 
@@ -26,7 +27,7 @@
                                 上船时间
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.boardingTime}}
                             </div>
                         </div>
                         <div style="width: 50%;">
@@ -34,7 +35,7 @@
                                 下船时间
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.getOutTime}}
                             </div>
                         </div>
                     </div>
@@ -44,7 +45,7 @@
                                 联系电话
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.phone}}
                             </div>
                         </div>
                         <div style="width: 50%;">
@@ -52,7 +53,7 @@
                                 身份证号
                             </div>
                             <div>
-                                620302199402871198
+                                {{crewRecordDetails.idCard}}
                             </div>
                         </div>
                     </div>
@@ -62,15 +63,15 @@
                                 亲属紧急联系电话
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.emergencyContactNumberRelatives}}
                             </div>
                         </div>
                         <div style="width: 50%;">
                             <div class="c6A79B7">
-                                检查健康吗
+                                检查健康码
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.isCheckHealthCodeName}}
                             </div>
                         </div>
                     </div>
@@ -81,7 +82,7 @@
                                 工种
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.typeWork}}
                             </div>
                         </div>
                         <div style="width: 50%;">
@@ -89,7 +90,7 @@
                                 登轮办事事由
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.boardDuty}}
                             </div>
                         </div>
                     </div>
@@ -100,7 +101,7 @@
                                 乘坐交通工具
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.transport?'是':'否'}}
                             </div>
                         </div>
                         <div style="width: 50%;">
@@ -108,7 +109,7 @@
                                 公安码
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.policeCodeInput}}
                             </div>
                         </div>
                     </div>
@@ -119,7 +120,7 @@
                                 防护装备穿戴情况
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.wearingProtectiveEquipment?'是':'否'}}
                             </div>
                         </div>
                         <div style="width: 50%;">
@@ -127,7 +128,7 @@
                                 体温
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.bodyTemperature}}
                             </div>
                         </div>
                     </div>
@@ -138,7 +139,7 @@
                                 是否咳嗽
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.isWhetherCough?'是':'否'}}
                             </div>
                         </div>
                         <div style="width: 50%;">
@@ -146,7 +147,7 @@
                                 家庭住址
                             </div>
                             <div>
-                                2020-02-02
+                                {{crewRecordDetails.address}}
                             </div>
                         </div>
                     </div>
@@ -178,6 +179,7 @@
             return {
                 msg: 'Welcome to Your Vue.js App',
                 value: "",
+                crewRecordDetails: ''
             }
         },
         components: {
@@ -190,8 +192,21 @@
             [Popup.name]: Popup,
         },
         methods: {
-
+            goBack() {
+                console.log(this.crewRecordDetails)
+                const data = {
+                    classesId: this.crewRecordDetails.classesId
+                }
+                let obj = JSON.stringify(data);
+                this.$router.push("/crewRecord?obj=" + encodeURIComponent(obj))
+            },
         },
+        mounted() {
+            if (this.$route.query.obj){
+                var list = decodeURIComponent(this.$route.query.obj);
+                this.crewRecordDetails = JSON.parse(list);
+            }
+        }
     }
 </script>
 
@@ -208,7 +223,16 @@
     .top {
         height: 60px;
     }
-
+    .back {
+        padding: 20px;
+        padding-left: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        color: #ffffff;
+        font-size: 12px;
+        height: 60px;
+        line-height: 60px;
+    }
     .info-top {
         padding-bottom: 10px;
         border-bottom: 1px solid #BED9FF;
@@ -246,5 +270,12 @@
 
     .info-content .flex {
         padding: 10px 20px;
+    }
+    .back-banci{
+        align-items: center;
+    }
+    .banci-img{
+        width: 28px;
+        height: 28px;
     }
 </style>

@@ -17,8 +17,8 @@
                 <van-field
                     readonly
                     clickable
-                    name="calendar"
-                    v-model="calendar"
+                    name="classesDate"
+                    v-model="classesDate"
                     label="班次日期"
                     placeholder="点击选择日期"
                     @click="showCalendar = true"
@@ -26,8 +26,8 @@
                 <van-field
                     readonly
                     clickable
-                    v-model="begin"
-                    name="begin"
+                    v-model="classesStartTime"
+                    name="classesStartTime"
                     label="班次开始时间"
                     placeholder="点击选择时间"
                     @click="showPickerBegin = true"
@@ -35,8 +35,8 @@
                 <van-field
                     readonly
                     clickable
-                    name="end"
-                    v-model="end"
+                    name="classesEndTime"
+                    v-model="classesEndTime"
                     label="班次结束时间"
                     placeholder="点击选择时间"
                     @click="showPickerEnd = true"
@@ -82,9 +82,11 @@
                 showPickerEnd: false,
                 showPickerBegin: false,
                 showCalendar: false,
-                begin: "",
-                end: "",
-                calendar: "",
+                classesStartTime: "",
+                classesEndTime: "",
+                classesDate: "",
+                shipId: "",
+                id: "",
             }
         },
         components: {
@@ -96,39 +98,61 @@
             [Calendar.name]: Calendar,
         },
         methods: {
-
-
-
             goBack() {
                 this.$router.push('/dlinfo');
             },
             onConfirmBegin(time) {
-                this.begin = time;
+                this.classesStartTime = time+':00';
                 this.showPickerBegin = false;
             },
             onConfirmEnd(time) {
-                this.end = time;
+                this.classesEndTime = time+':00';
                 this.showPickerEnd = false;
             },
             onConfirmCalendar(date) {
                 // this.calendar = `${date.getMonth() + 1}/${date.getDate()}`;
-                this.calendar = this.$moment(date).format('YYYY-MM-DD');
+                this.classesDate = this.$moment(date).format('YYYY-MM-DD');
                 this.showCalendar = false;
             },
             onSubmit(values) {
-                console.log('submit', values);
+                values['shipId'] = this.shipId;
+                values['id'] = this.id;
+                this.$axios({
+                        method: 'post',
+                        url: `epidemic/seamanclasses/submit`,
+                        data:values,
+                        headers: {
+                            'Blade-Auth': 'bearer ' + window.localStorage.getItem('token')　　　　//由于是多页面应用所以token存储在本地localStorage中
+                        }
+                    },
+                ).then(res => {
+                    this.$router.push('/dlinfo');
+                }).catch(req => {
+                    console.log(req)
+                })
             },
         },
         mounted() {
 
-            if (this.$route.query.obj){
-                var list = decodeURIComponent(this.$route.query.obj);
-                this.begin = JSON.parse(list).begin;
-                this.end = JSON.parse(list).end;
+            if (this.$route.query.objAdd){
+                var list = decodeURIComponent(this.$route.query.objAdd);
+                this.shipId = JSON.parse(list).shipId;
+                console.log(list);
+            }
+
+            if (this.$route.query.objEdit){
+                var list = decodeURIComponent(this.$route.query.objEdit);
+                this.shipId = JSON.parse(list).shipId;
+                this.id = JSON.parse(list).id;
+                this.classesDate = JSON.parse(list).date;
+                this.classesStartTime =  this.$moment(JSON.parse(list).startTime).format('hh:mm:ss');
+                this.classesEndTime = this.$moment(JSON.parse(list).endTime).format('hh:mm:ss');
+
+                console.log(list);
             }
 
 
-            console.log(this.$moment(new Date()).format('YYYY-MM-DD'));;
+            console.log();
             // this.$axios({
             //         method: 'GET',
             //         url: `/infoList?limit=${2}`,

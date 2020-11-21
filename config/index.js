@@ -12,7 +12,7 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {     //axios跨域处理
             '/api': {       //此处并非和url一致 任意取 但要与 Vue.prototype.HOME 的值一样
-                target: 'http://localhost:8866/api/', // 你的数据连接
+                target: 'http://localhost:8866/', // 你的数据连接
                 changeOrigin: true, //允许跨域  关键
                 pathRewrite: {
                     '^/api': ''
@@ -21,7 +21,7 @@ module.exports = {
         },
 
         // Various Dev Server settings
-        host: '192.168.19.40', // can be overwritten by process.env.HOST
+        host: '192.168.3.5', // can be overwritten by process.env.HOST
         port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
         autoOpenBrowser: false,
         errorOverlay: true,

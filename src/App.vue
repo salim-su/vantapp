@@ -56,4 +56,7 @@
     .mr5{
         margin-right: 5px;
     }
+    .ml5{
+        margin-left: 5px;
+    }
 </style>

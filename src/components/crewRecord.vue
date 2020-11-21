@@ -16,45 +16,45 @@
 
         <div class="content">
 
-            <div v-for="item of [1,2,3,4]" class="card-item">
+            <div v-for="item of crewRecord" class="card-item">
                 <div class="card-item-content">
                     <!--title-->
                     <div class="card-item-content-title">
-                        <span style="color: #1F75FF">salimsu</span>
-                        <span class="country">中国</span>
-                        <span class="sex">男</span>
-                        <img @click="goDetails()" class="more" src="../assets/img/more.png" alt="">
+                        <span style="color: #1F75FF">{{item.name}}</span>
+                        <span class="country">{{item.nationalityName}}</span>
+                        <span class="sex">{{item.genderName}}</span>
+                        <img @click="goDetails(item)" class="more" src="../assets/img/more.png" alt="">
                     </div>
 
                     <div class="card-item-content-info">
                         <div class="flex content-item">
                             <div style="width: 50%;">
                                 <span class="c6A79B7 fs10">上船时间</span>
-                                <span>2020-02-02</span>
+                                <span>{{item.boardingTime}}</span>
                             </div>
                             <div style="width: 50%;">
                                 <span class="c6A79B7 fs10">下船时间</span>
-                                <span>2020-02-02</span>
+                                <span>{{item.getOutTime}}</span>
                             </div>
                         </div>
                         <div class="flex content-item">
                             <div style="width: 50%;">
                                 <span class="c6A79B7 fs10">联系电话</span>
-                                <span>15822442114</span>
+                                <span>{{item.phone}}</span>
                             </div>
                             <div style="width: 50%;">
                                 <span class="c6A79B7 fs10">身份证号</span>
-                                <span>610323199905041189</span>
+                                <span>{{item.idCard}}</span>
                             </div>
                         </div>
                         <div class="flex content-item">
                             <div style="width: 50%;">
                                 <span class="c6A79B7 fs10">亲属电话</span>
-                                <span>2020-02-02</span>
+                                <span>{{item.emergencyContactNumberRelatives}}</span>
                             </div>
                             <div style="width: 50%;">
-                                <span class="c6A79B7 fs10">检查健康吗</span>
-                                <span>是</span>
+                                <span class="c6A79B7 fs10">检查健康码</span>
+                                <span>{{item.isCheckHealthCodeName}}</span>
                             </div>
                         </div>
                     </div>
@@ -115,6 +115,7 @@
                 show: false,
                 name: '',
                 idcard: '',
+                crewRecord:''
             }
         },
         components: {
@@ -136,20 +137,46 @@
             onCancel() {
                 Toast('取消');
             },
-            goDetails() {
-                this.$router.push('/crewRecordDetails');
+            goDetails(item) {
+                let obj= JSON.stringify(item);
+
+                this.$router.push("/crewRecordDetails?obj=" + encodeURIComponent(obj))
             },
             search() {
                 this.show = true;
             },
             onSubmit(values) {
                 console.log('submit', values);
+                this.show = false;
+                this.getCrewRecord();
             },
             cancel() {
                 this.show = false;
+            },
+            getCrewRecord(){
+                this.$axios({
+                        method: 'GET',
+                        url: `epidemic/seamanrecord/list?classesId=${this.classesId}&name=${this.name}`,
+                        headers: {
+                            'Blade-Auth': 'bearer ' + window.localStorage.getItem('token')　　　　//由于是多页面应用所以token存储在本地localStorage中
+                        }
+                    },
+                ).then(res => {
+                    console.log(res.data.data);
+                    this.crewRecord = res.data.data;
+                }).catch(req => {
+                    console.log(req)
+                })
             }
+
         },
         mounted() {
+            console.log(1)
+            if (this.$route.query.obj){
+                var list = decodeURIComponent(this.$route.query.obj);
+                this.classesId = JSON.parse(list).classesId;
+                this.getCrewRecord();
+            }
         },
     }
 </script>
@@ -268,5 +295,8 @@
     .banci-img{
         width: 28px;
         height: 28px;
+    }
+    .van-button{
+        height: 30px;
     }
 </style>
