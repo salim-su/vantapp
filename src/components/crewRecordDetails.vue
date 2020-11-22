@@ -193,7 +193,6 @@
         },
         methods: {
             goBack() {
-                console.log(this.crewRecordDetails)
                 const data = {
                     classesId: this.crewRecordDetails.classesId
                 }

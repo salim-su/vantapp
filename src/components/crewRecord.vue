@@ -5,9 +5,10 @@
                 <img class="banci-img" src="../assets/img/goback.png" alt="">
             </div>
             <van-search
+                @click="search"
                 v-model="value"
-                @focus="search"
                 @cancel="onCancel"
+                disabled
                 left-icon=""
                 label="船员记录"
                 right-icon="search"
@@ -146,7 +147,6 @@
                 this.show = true;
             },
             onSubmit(values) {
-                console.log('submit', values);
                 this.show = false;
                 this.getCrewRecord();
             },
@@ -162,16 +162,14 @@
                         }
                     },
                 ).then(res => {
-                    console.log(res.data.data);
                     this.crewRecord = res.data.data;
                 }).catch(req => {
-                    this.$router.push('/login');
+                    this.$router.push('/');
                 })
             }
 
         },
         mounted() {
-            console.log(1)
             if (this.$route.query.obj){
                 var list = decodeURIComponent(this.$route.query.obj);
                 this.classesId = JSON.parse(list).classesId;

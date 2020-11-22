@@ -6,8 +6,9 @@
         <div class="search">
             <van-search
                 v-model="value"
-                @search="onSearch"
+                @click="onSearch"
                 @cancel="onCancel"
+                disabled
                 label="登轮信息"
                 left-icon=""
                 right-icon="search"
@@ -88,13 +89,74 @@
                 <div id="qrcode"></div>
                 <div>请扫描二维码如实填写信息</div>
             </van-popup>
+
+            <van-popup v-model:show="showSearch" position="top" :style="{ height: '100%' }">
+
+
+                <div class="pop-search">
+                    <div class="pop-search-title">
+                        <span>条件查询</span>
+                    </div>
+
+                    <van-form @submit="onSubmit">
+                        <van-field
+                            v-model="name"
+                            name="name"
+                            label="名称"
+                            placeholder="名称"
+                        />
+                        <van-field
+                            readonly
+                            clickable
+                            v-model="startWorkBegin"
+                            name="startWorkBegin"
+                            label="开工时间起始"
+                            placeholder="点击选择时间"
+                            @click="showPickerBegin = true"
+                        />
+                        <van-field
+                            readonly
+                            clickable
+                            name="startWorkEnd"
+                            v-model="startWorkEnd"
+                            label="开工时间截止"
+                            placeholder="点击选择时间"
+                            @click="showPickerEnd = true"
+                        />
+                        <div style="margin: 16px;" class="flex btn">
+                            <van-button type="primary" native-type="submit">确认</van-button>
+
+                            <van-button type="warning" @click="cancel()">取消</van-button>
+                        </div>
+                    </van-form>
+
+
+                </div>
+            </van-popup>
+
+
+            <van-popup v-model="showPickerBegin" position="bottom">
+                <van-datetime-picker
+                    @confirm="onConfirmBegin"
+                    @cancel="showPickerBegin = false"
+                    type="date"
+                />
+            </van-popup>
+
+            <van-popup v-model="showPickerEnd" position="bottom">
+                <van-datetime-picker
+                    @confirm="onConfirmEnd"
+                    @cancel="showPickerEnd = false"
+                    type="date"
+                />
+            </van-popup>
         </div>
     </div>
 </template>
 
 
 <script>
-    import {Button, Field, Form, ActionSheet, Toast, Search, Popup} from "vant";
+    import {Button, Field, Form, ActionSheet, Toast, Search, Popup, DatetimePicker} from "vant";
     import QRCode from 'qrcodejs2';
 
     export default {
@@ -111,7 +173,12 @@
                 name:'',
                 shipName:'',
                 banciName:'',
-                banciDate:''
+                banciDate:'',
+                showSearch:false,
+                startWorkBegin:'',
+                startWorkEnd:'',
+                showPickerEnd: false,
+                showPickerBegin: false,
             }
         },
         components: {
@@ -122,6 +189,8 @@
             [Toast.name]: Toast,
             [Search.name]: Search,
             [Popup.name]: Popup,
+            [DatetimePicker.name]: DatetimePicker,
+
         },
         mounted() {
             this.getshipList();
@@ -166,9 +235,6 @@
                 }
                 this.show = false;
             },
-            goMore(item) {
-
-            },
             goAdd(item) {
                 let data = {
                     shipId: item.id
@@ -176,9 +242,16 @@
                 let objAdd = JSON.stringify(data);
                 this.$router.push("/banci?objAdd=" + encodeURIComponent(objAdd))
             },
+            onConfirmBegin(time) {
+                this.startWorkBegin = this.$moment(time).format('YYYY-MM-DD');
+                this.showPickerBegin = false;
+            },
+            onConfirmEnd(time) {
+                this.startWorkEnd = this.$moment(time).format('YYYY-MM-DD');
+                this.showPickerEnd = false;
+            },
             onSearch(val) {
-                this.name = val;
-                this.getshipList();
+                this.showSearch = true;
             },
             onCancel() {
                 Toast('取消');
@@ -191,8 +264,6 @@
             },
 
             qrcode(item,i) {
-                console.log(item);
-                console.log(i);
                 this.shipName = i.name;
                 this.banciDate = item.date;
                 this.banciName = item.name;
@@ -203,12 +274,19 @@
                 if (code.childNodes.length > 0) {
                     code.innerHTML = "";
                 }
-                console.log("加载二维码")
                 let qrcode = new QRCode('qrcode', {
                     width: 150,
                     height: 150,
                     text: 'http://192.168.19.3:8867/index.html?classesId=' + item.id, // 二维码地址
                 })
+            },
+
+            onSubmit(values) {
+                this.showSearch = false;
+                this.getshipList();
+            },
+            cancel() {
+                this.showSearch = false;
             },
 
             getshipList(){
@@ -220,10 +298,9 @@
                         }
                     },
                 ).then(res => {
-                    console.log(res.data.data);
                     this.shipInfo = res.data.data;
                 }).catch(req => {
-                    this.$router.push('/login');
+                    this.$router.push('/');
                 })
             }
         },
@@ -375,5 +452,30 @@
         border: 1px solid #1DBD65;
         padding: 6px;
     }
+    .btn {
+        justify-content: space-around;
+    }
+    .pop-search {
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+    }
 
+    .pop-search-title {
+        padding: 10px;
+        font-size: 12px;
+        color: #636C8C;
+        border-bottom: 1px solid #AFD0FF;
+    }
+    .pop-search .van-button--normal {
+        padding: 0 30px;
+        margin-top: 30px;
+    }
+    .pop-search .van-cell {
+        margin-top: 10px;
+    }
+    .van-button{
+        height: 30px;
+    }
 </style>

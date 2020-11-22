@@ -72,7 +72,7 @@
 </template>
 
 <script>
-    import {Button, Field, Form, DatetimePicker, Popup, Calendar} from "vant";
+    import {Button, Field, Form, DatetimePicker, Popup, Calendar, Toast} from "vant";
 
     export default {
         name: "banci",
@@ -96,6 +96,8 @@
             [DatetimePicker.name]: DatetimePicker,
             [Popup.name]: Popup,
             [Calendar.name]: Calendar,
+            [Toast.name]: Toast,
+
         },
         methods: {
             goBack() {
@@ -117,6 +119,21 @@
             onSubmit(values) {
                 values['shipId'] = this.shipId;
                 values['id'] = this.id;
+
+                if (!values.classesDate) {
+                    Toast('请填写班次日期');
+                    return;
+                }
+                if (!values.classesStartTime) {
+                    Toast('请填写班次开始时间');
+                    return;
+                }
+                if (!values.classesEndTime) {
+                    Toast('请填写班次结束时间');
+                    return;
+                }
+
+
                 this.$axios({
                         method: 'post',
                         url: `epidemic/seamanclasses/submit`,
@@ -128,7 +145,7 @@
                 ).then(res => {
                     this.$router.push('/dlinfo');
                 }).catch(req => {
-                    this.$router.push('/login');
+                    this.$router.push('/');
                 })
             },
         },
@@ -137,7 +154,6 @@
             if (this.$route.query.objAdd){
                 var list = decodeURIComponent(this.$route.query.objAdd);
                 this.shipId = JSON.parse(list).shipId;
-                console.log(list);
             }
 
             if (this.$route.query.objEdit){
@@ -147,37 +163,7 @@
                 this.classesDate = JSON.parse(list).date;
                 this.classesStartTime =  this.$moment(JSON.parse(list).startTime).format('hh:mm:ss');
                 this.classesEndTime = this.$moment(JSON.parse(list).endTime).format('hh:mm:ss');
-
-                console.log(list);
             }
-
-
-            console.log();
-            // this.$axios({
-            //         method: 'GET',
-            //         url: `/infoList?limit=${2}`,
-            //         headers: {
-            //             'token': window.localStorage.getItem('token')　　　　//由于是多页面应用所以token存储在本地localStorage中
-            //         }
-            //     },
-            // ).then(res => {
-            //     console.log(res)
-            // }).catch(req => {
-            //     console.log(req)
-            // })
-
-            // this.$axios({
-            //         method: 'post',
-            //         url: `/infoList`,
-            //         data:{
-            //             a:'1'
-            //         }
-            //     },
-            // ).then(res => {
-            //     console.log(res)
-            // }).catch(req => {
-            //     console.log(req)
-            // })
         }
     }
 </script>
